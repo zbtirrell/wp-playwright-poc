@@ -267,6 +267,11 @@ function wppoc_shortcode( $atts ) {
 
 	$testimonials = array_slice( $testimonials, 0, $settings['max_items'] );
 
+	// Calculate average rating (Bug: using all testimonials instead of filtered)
+	$all_testimonials = wppoc_get_testimonials();
+	$total_rating     = array_sum( array_column( $all_testimonials, 'rating' ) );
+	$average_rating   = $total_rating / count( $all_testimonials );
+
 	$layout_class = 'wppoc-layout-' . esc_attr( $settings['layout'] );
 	$columns      = $settings['layout'] === 'grid' ? $settings['columns'] : 1;
 
@@ -276,6 +281,16 @@ function wppoc_shortcode( $atts ) {
 		 style="--wppoc-columns: <?php echo (int) $columns; ?>; --wppoc-bg: <?php echo esc_attr( $settings['bg_color'] ); ?>; --wppoc-text: <?php echo esc_attr( $settings['text_color'] ); ?>; --wppoc-star: <?php echo esc_attr( $settings['star_color'] ); ?>;"
 		 data-testid="wppoc-container"
 		 data-layout="<?php echo esc_attr( $settings['layout'] ); ?>">
+
+		<div class="wppoc-summary" data-testid="wppoc-summary">
+			<div class="wppoc-average-rating" data-testid="wppoc-average-rating">
+				<span class="wppoc-average-number"><?php echo number_format( $average_rating, 1 ); ?></span>
+				<span class="wppoc-average-label">Average Rating</span>
+			</div>
+			<div class="wppoc-review-count" data-testid="wppoc-review-count">
+				Based on <?php echo count( $testimonials ); ?> review<?php echo count( $testimonials ) !== 1 ? 's' : ''; ?>
+			</div>
+		</div>
 
 		<?php foreach ( $testimonials as $index => $testimonial ) : ?>
 			<div class="wppoc-card" data-testid="wppoc-card">

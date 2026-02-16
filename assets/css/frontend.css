@@ -67,3 +67,36 @@
 	line-height: 1.6;
 	margin: 0;
 }
+
+.wppoc-summary {
+	grid-column: 1 / -1;
+	text-align: center;
+	padding: 30px 20px;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	border-radius: 12px;
+	color: white;
+	margin-bottom: 20px;
+}
+
+.wppoc-average-rating {
+	margin-bottom: 10px;
+}
+
+.wppoc-average-number {
+	display: block;
+	font-size: 3em;
+	font-weight: bold;
+	line-height: 1;
+	margin-bottom: 5px;
+}
+
+.wppoc-average-label {
+	display: block;
+	font-size: 1.1em;
+	opacity: 0.9;
+}
+
+.wppoc-review-count {
+	font-size: 0.95em;
+	opacity: 0.85;
+}
