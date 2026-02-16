@@ -25,6 +25,7 @@ function wppoc_default_settings() {
 		'max_items'   => 6,
 		'show_stars'  => true,
 		'show_date'   => true,
+		'min_rating'  => 1,
 		'bg_color'    => '#ffffff',
 		'text_color'  => '#333333',
 		'star_color'  => '#f5a623',
@@ -136,6 +137,7 @@ function wppoc_sanitize_settings( $input ) {
 	$sanitized['max_items']  = absint( $input['max_items'] );
 	$sanitized['show_stars'] = ! empty( $input['show_stars'] );
 	$sanitized['show_date']  = ! empty( $input['show_date'] );
+	$sanitized['min_rating'] = max( 1, min( 5, absint( $input['min_rating'] ) ) );
 	$sanitized['bg_color']   = sanitize_hex_color( $input['bg_color'] ) ?: '#ffffff';
 	$sanitized['text_color'] = sanitize_hex_color( $input['text_color'] ) ?: '#333333';
 	$sanitized['star_color'] = sanitize_hex_color( $input['star_color'] ) ?: '#f5a623';
@@ -201,6 +203,19 @@ function wppoc_settings_page() {
 					</td>
 				</tr>
 				<tr>
+					<th scope="row"><label for="wppoc-min-rating">Minimum Rating</label></th>
+					<td>
+						<select name="wppoc_settings[min_rating]" id="wppoc-min-rating">
+							<option value="1" <?php selected( $settings['min_rating'], 1 ); ?>>1 Star and above</option>
+							<option value="2" <?php selected( $settings['min_rating'], 2 ); ?>>2 Stars and above</option>
+							<option value="3" <?php selected( $settings['min_rating'], 3 ); ?>>3 Stars and above</option>
+							<option value="4" <?php selected( $settings['min_rating'], 4 ); ?>>4 Stars and above</option>
+							<option value="5" <?php selected( $settings['min_rating'], 5 ); ?>>5 Stars only</option>
+						</select>
+						<p class="description">Only show reviews with this rating or higher</p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><label for="wppoc-bg-color">Background Color</label></th>
 					<td>
 						<input type="text" name="wppoc_settings[bg_color]" id="wppoc-bg-color" value="<?php echo esc_attr( $settings['bg_color'] ); ?>" class="regular-text" />
@@ -244,6 +259,12 @@ add_action( 'wp_enqueue_scripts', 'wppoc_enqueue_styles' );
 function wppoc_shortcode( $atts ) {
 	$settings     = wppoc_get_settings();
 	$testimonials = wppoc_get_testimonials();
+
+	// Filter by minimum rating
+	$testimonials = array_filter( $testimonials, function( $testimonial ) use ( $settings ) {
+		return $testimonial['rating'] >= $settings['min_rating'];
+	} );
+
 	$testimonials = array_slice( $testimonials, 0, $settings['max_items'] );
 
 	$layout_class = 'wppoc-layout-' . esc_attr( $settings['layout'] );
