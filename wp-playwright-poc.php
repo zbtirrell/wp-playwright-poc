@@ -246,7 +246,7 @@ function wppoc_shortcode( $atts ) {
 	$testimonials = wppoc_get_testimonials();
 	$testimonials = array_slice( $testimonials, 0, $settings['max_items'] );
 
-	$layout_class = 'wppoc-layout-' . esc_attr( $settings['layout'] );
+	$layout_class = 'wppoc-layout-grid'; // Bug: Always uses grid layout
 	$columns      = $settings['layout'] === 'grid' ? $settings['columns'] : 1;
 
 	ob_start();
