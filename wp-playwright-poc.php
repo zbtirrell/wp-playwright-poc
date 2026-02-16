@@ -265,12 +265,12 @@ function wppoc_shortcode( $atts ) {
 		return $testimonial['rating'] >= $settings['min_rating'];
 	} );
 
-	$testimonials = array_slice( $testimonials, 0, $settings['max_items'] );
+	// Calculate average rating from filtered testimonials
+	$total_rating   = array_sum( array_column( $testimonials, 'rating' ) );
+	$average_rating = count( $testimonials ) > 0 ? $total_rating / count( $testimonials ) : 0;
+	$filtered_count = count( $testimonials );
 
-	// Calculate average rating (Bug: using all testimonials instead of filtered)
-	$all_testimonials = wppoc_get_testimonials();
-	$total_rating     = array_sum( array_column( $all_testimonials, 'rating' ) );
-	$average_rating   = $total_rating / count( $all_testimonials );
+	$testimonials = array_slice( $testimonials, 0, $settings['max_items'] );
 
 	$layout_class = 'wppoc-layout-' . esc_attr( $settings['layout'] );
 	$columns      = $settings['layout'] === 'grid' ? $settings['columns'] : 1;
@@ -288,7 +288,7 @@ function wppoc_shortcode( $atts ) {
 				<span class="wppoc-average-label">Average Rating</span>
 			</div>
 			<div class="wppoc-review-count" data-testid="wppoc-review-count">
-				Based on <?php echo count( $testimonials ); ?> review<?php echo count( $testimonials ) !== 1 ? 's' : ''; ?>
+				Based on <?php echo $filtered_count; ?> review<?php echo $filtered_count !== 1 ? 's' : ''; ?>
 			</div>
 		</div>
 
