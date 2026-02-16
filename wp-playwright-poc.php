@@ -262,7 +262,7 @@ function wppoc_shortcode( $atts ) {
 
 	// Filter by minimum rating
 	$testimonials = array_filter( $testimonials, function( $testimonial ) use ( $settings ) {
-		return $testimonial['rating'] > $settings['min_rating'];
+		return $testimonial['rating'] >= $settings['min_rating'];
 	} );
 
 	$testimonials = array_slice( $testimonials, 0, $settings['max_items'] );
