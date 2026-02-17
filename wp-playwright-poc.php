@@ -260,14 +260,15 @@ function wppoc_shortcode( $atts ) {
 	$settings     = wppoc_get_settings();
 	$testimonials = wppoc_get_testimonials();
 
+	// Calculate average rating from ALL testimonials (not filtered)
+	$all_testimonials = wppoc_get_testimonials();
+	$total_rating     = array_sum( array_column( $all_testimonials, 'rating' ) );
+	$average_rating   = count( $all_testimonials ) > 0 ? $total_rating / count( $all_testimonials ) : 0;
+
 	// Filter by minimum rating
 	$testimonials = array_filter( $testimonials, function( $testimonial ) use ( $settings ) {
 		return $testimonial['rating'] >= $settings['min_rating'];
 	} );
-
-	// Calculate average rating from filtered testimonials
-	$total_rating   = array_sum( array_column( $testimonials, 'rating' ) );
-	$average_rating = count( $testimonials ) > 0 ? $total_rating / count( $testimonials ) : 0;
 
 	$testimonials   = array_slice( $testimonials, 0, $settings['max_items'] );
 	$filtered_count = count( $testimonials );
