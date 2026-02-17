@@ -268,9 +268,9 @@ function wppoc_shortcode( $atts ) {
 	// Calculate average rating from filtered testimonials
 	$total_rating   = array_sum( array_column( $testimonials, 'rating' ) );
 	$average_rating = count( $testimonials ) > 0 ? $total_rating / count( $testimonials ) : 0;
-	$filtered_count = count( $testimonials );
 
-	$testimonials = array_slice( $testimonials, 0, $settings['max_items'] );
+	$testimonials   = array_slice( $testimonials, 0, $settings['max_items'] );
+	$filtered_count = count( $testimonials );
 
 	$layout_class = 'wppoc-layout-' . esc_attr( $settings['layout'] );
 	$columns      = $settings['layout'] === 'grid' ? $settings['columns'] : 1;
